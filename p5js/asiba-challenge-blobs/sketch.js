@@ -172,9 +172,11 @@ function calculateDensityAt(x, y) {
   return density;
 }
 
+/*
 function mouseWheel() {
   return false;
 }
+  */
 
 function mousePressed() {
   // マウスクリックで爆発を発生

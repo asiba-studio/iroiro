@@ -15,6 +15,7 @@ let displayWidth, displayHeight;
 let tilesY;
 let actualCanvasHeight;
 let hoverGap = 0;
+let prevMouseX = 0;
 
 
 // Verex shader
@@ -114,16 +115,20 @@ function draw() {
 	if (!img || !imageAspect) return;
   
   // マウスホバーの検出
-  let isHovered = (mouseX > hoverGap && mouseX < width-hoverGap && mouseY > hoverGap && mouseY < height-hoverGap);
+  // let isHovered = (mouseX > hoverGap && mouseX < width-hoverGap && mouseY > hoverGap && mouseY < height-hoverGap);
+  
+  let hasMovement = abs(mouseX - prevMouseX) > 0.01;
   
   // カウンターの更新
-  if (isHovered) {
-    // ホバー中は大幅に減少（毎フレーム約2.0減少 = 60fps時、30フレームで60減少）
-    mosaicCounter -= 5.0;
+  if (hasMovement) {
+    // ホバー中は大幅に減少
+    mosaicCounter -= 6.0;
   } else {
-    // 非ホバー時は少し増加（毎フレーム約0.5増加 = 60fps時、120フレームで60増加）
+    // 非ホバー時は少し増加
     mosaicCounter += 0.5;
   }
+
+  prevMouseX = mouseX;
 
   mosaicCounter = constrain(mosaicCounter, mosaicCounterMin, mosaicCounterBase);
   console.log(mosaicCounter);

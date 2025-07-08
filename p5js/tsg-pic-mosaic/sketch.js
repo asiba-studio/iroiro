@@ -94,8 +94,14 @@ void main() {
 
   // 減衰
   float mosaicIntensityFactor = clamp(u_mosaicCounter, 0.0, 100.0) / 100.0;
+  // float finalIntensity = baseIntensity * mosaicIntensityFactor;
 
-  float finalIntensity = baseIntensity * mosaicIntensityFactor;
+  // // オリジナル色とモザイク色を別々に計算
+  vec4 originalColor = texture2D(u_texture, uv);
+  vec4 mosaicColor = mosaic(u_texture, uv, baseIntensity);
+
+  // 線形補間で滑らかに変化
+  vec4 finalColor = mix(originalColor, mosaicColor, mosaicIntensityFactor);
   
   // 2本の線
   vec4 lineLayer = vec4(0.0, 0.0, 0.0, 0.0);
@@ -106,7 +112,7 @@ void main() {
   }
 
   // 最終グラフィック
-  gl_FragColor = mix(mosaic(u_texture, uv, finalIntensity), lineLayer, lineLayer.a);
+  gl_FragColor = mix(finalColor, lineLayer, lineLayer.a);
 }
 `;
 

@@ -142,10 +142,10 @@ function draw() {
   // カウンターの更新
   if (hasMovement) {
     // ホバー中は大幅に減少
-    mosaicCounter -= 6.0;
+    mosaicCounter -= 8.0;
   } else {
     // 非ホバー時は少し増加
-    mosaicCounter += 0.5;
+    mosaicCounter += 3.0;
   }
 
   prevMouseX = mouseX;

@@ -131,7 +131,7 @@ function calculateImageLayout() {
 	displayHeight = displayWidth / imageAspect;
 
 	// 縦方向に何枚タイルするか計算
-	tilesY = width / displayHeight;
+	tilesY = height / displayHeight;
 
 	// 実際のキャンバス高さ（タイル分を含む）
 	actualCanvasHeight = displayHeight * tilesY;

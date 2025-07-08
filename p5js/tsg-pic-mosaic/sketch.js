@@ -105,7 +105,7 @@ function draw() {
 	if (!img || !imageAspect) return;
   
   // マウスホバーの検出
-  isHovered = (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height);
+  isHovered = (mouseX > 150 && mouseX < width && mouseY > 0 && mouseY < height);
   
   // シェーダーを使用
   shader(mosaicShader);

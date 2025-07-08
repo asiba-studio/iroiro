@@ -120,7 +120,7 @@ void main() {
       }
   }
   
-  gl_FragColor = mosaic(u_texture, uv, intensity);
+  gl_FragColor = mosaic(u_texture, uv, finalIntensity);
 }
 `;
 

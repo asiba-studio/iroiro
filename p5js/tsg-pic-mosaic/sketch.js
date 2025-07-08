@@ -136,13 +136,6 @@ function calculateImageLayout() {
 
 	// 実際のキャンバス高さ（タイル分を含む）
 	actualCanvasHeight = displayHeight * tilesY;
-
-	console.log('📐 レイアウト計算結果:');
-	console.log(`  iframe: ${windowWidth}x${windowHeight}`);
-	console.log(`  画像: ${img.width}x${img.height} (比率: ${imageAspect.toFixed(2)})`);
-	console.log(`  表示: ${displayWidth}x${displayHeight.toFixed(1)}`);
-	console.log(`  タイル数: ${tilesY}`);
-	console.log(`  実際の高さ: ${actualCanvasHeight.toFixed(1)}`);
 }
 
 function windowResized() {

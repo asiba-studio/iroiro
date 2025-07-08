@@ -87,7 +87,7 @@ void main() {
   }
 
   // 減衰
-  float mosaicIntensityFactor = clamp(u_mosaicCounter, 0.0, 100,0) / 100.0;
+  float mosaicIntensityFactor = clamp(u_mosaicCounter, 0.0, 100.0) / 100.0;
 
   float finalIntensity = baseIntensity * mosaicIntensityFactor;
   

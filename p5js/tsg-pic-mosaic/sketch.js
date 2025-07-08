@@ -164,9 +164,9 @@ function draw() {
 
   console.log('📊 Shader uniforms:', {
     isHovered,
-    time: millis() / 1000.0,
+    mouseX,
+    mouseY,
     hoverEndTime,
-    tilesY
   });
 
   

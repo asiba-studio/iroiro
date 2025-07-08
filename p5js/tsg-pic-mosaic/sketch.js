@@ -94,7 +94,7 @@ function preload() {
 }
 
 function setup() {
-	createCanvas(230, windowHeight, WEBGL);
+	createCanvas(230, 1300, WEBGL);
 	calculateImageLayout();
 }
 

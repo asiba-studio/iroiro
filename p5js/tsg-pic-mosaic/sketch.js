@@ -4,6 +4,7 @@ let img;
 let mosaicShader;
 let isHovered = false;
 let defaultImageUrl = '';
+let virtualHeight = 1500;
 
 // studio用画像調整
 let imageAspect;
@@ -94,7 +95,7 @@ function preload() {
 }
 
 function setup() {
-	createCanvas(windowWidth, windowHeihgt, WEBGL);
+	createCanvas(windowWidth, virtualHeight, WEBGL);
 	calculateImageLayout();
 }
 
@@ -145,7 +146,7 @@ function calculateImageLayout() {
 }
 
 function windowResized() {
-	resizeCanvas(windowWidth, windowHeight);
+	resizeCanvas(windowWidth, virtualHeight);
 	calculateImageLayout(); // 再計算
 }
 

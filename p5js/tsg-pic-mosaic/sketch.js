@@ -2,9 +2,9 @@
 
 let img;
 let mosaicShader;
-let isHovered = false;
-let wasHovered = false;
-let hoverEndTime = 0;
+let mosaicCounterBase = 100.0;
+let mosaicCounter = mosaicCounterBase;
+let mosaicCounterMin = -50.0;
 let defaultImageUrl = '';
 let virtualHeight = 1500;
 
@@ -13,7 +13,7 @@ let imageAspect;
 let displayWidth, displayHeight;
 let tilesY;
 let actualCanvasHeight;
-let hoverGap = 25;
+let hoverGap = 0;
 
 
 // Verex shader
@@ -38,10 +38,9 @@ precision mediump float;
 uniform sampler2D u_texture;
 uniform vec2 u_resolution;
 uniform float uMosaicIntensity;
-uniform bool u_isHovered;
+uniform float u_mosaicCounter;
 uniform float u_tileY;
 uniform float u_time;
-uniform float u_hoverEndTime;
 varying vec2 vTexCoord;
 
 float random(vec2 st) {
@@ -66,12 +65,6 @@ void main() {
 	// 縦方向のタイリング処理
 	uv.y = mod(uv.y * u_tileY, 1.0);
   
-  if (u_isHovered) {
-    // ホバー時はモザイクなし
-    gl_FragColor = texture2D(u_texture, uv);
-    return;
-  }
-  
   // 3段階のモザイク強度を計算
   float x = uv.x;
   float baseIntensity;
@@ -87,34 +80,10 @@ void main() {
     baseIntensity = 0.1;
   }
 
-  float finalIntensity = baseIntensity;
+  // 減衰
+  float mosaicIntensityFactor = clamp(u_mosaicCounter, 0.0, 100,0) / 100.0;
 
-  // ホバー終了後の復元エフェクト
-  if (!u_isHovered && u_hoverEndTime > 0.0) {
-      float timeSinceHoverEnd = u_time - u_hoverEndTime;
-      
-      // ピクセルごとのランダムな遅延時間（0.0〜2.0秒）
-      float pixelSeed = random(gl_FragCoord.xy * 0.01);
-      float delayTime = pixelSeed * 2.0;
-      
-      // 復元にかかる時間（0.5〜1.5秒）
-      float restoreTime = 0.5 + pixelSeed * 1.0;
-      
-      if (timeSinceHoverEnd > delayTime) {
-          // 復元開始
-          float restoreProgress = (timeSinceHoverEnd - delayTime) / restoreTime;
-          restoreProgress = clamp(restoreProgress, 0.0, 1.0);
-          
-          // イージング関数（スムーズな復元）
-          float eased = 1.0 - pow(1.0 - restoreProgress, 3.0);
-          
-          // モザイク強度を段階的に復元
-          finalIntensity = baseIntensity * (1.0 - eased);
-      } else {
-          // まだ復元開始していない（モザイクなし状態を維持）
-          finalIntensity = 0.0;
-      }
-  }
+  float finalIntensity = baseIntensity * mosaicIntensityFactor;
   
   gl_FragColor = mosaic(u_texture, uv, finalIntensity);
 }
@@ -139,37 +108,28 @@ function draw() {
 	if (!img || !imageAspect) return;
   
   // マウスホバーの検出
-  isHovered = (mouseX > hoverGap && mouseX < width-hoverGap && mouseY > hoverGap && mouseY < height-hoverGap);
+  let isHovered = (mouseX > hoverGap && mouseX < width-hoverGap && mouseY > hoverGap && mouseY < height-hoverGap);
   
-  // ホバー状態の変化を検出
-  if (wasHovered && !isHovered) {
-    // ホバーが終了した瞬間
-    hoverEndTime = millis() / 1000.0;
-  } else if (!wasHovered && isHovered) {
-    // ホバーが開始した瞬間（復元エフェクトをリセット）
-    hoverEndTime = 0;
+  // カウンターの更新
+  if (isHovered) {
+    // ホバー中は大幅に減少（毎フレーム約2.0減少 = 60fps時、30フレームで60減少）
+    mosaicCounter -= 2.0;
+  } else {
+    // 非ホバー時は少し増加（毎フレーム約0.5増加 = 60fps時、120フレームで60増加）
+    mosaicCounter += 0.5;
   }
 
-  wasHovered = isHovered;
+  mosaicCounter = constrain(mosaicCounter, mosaicCounterMin, mosaicCounterBase);
+
 
   // シェーダーを使用
   shader(mosaicShader);
   
-  // ユニフォーム変数を設定
   mosaicShader.setUniform('u_texture', img);
   mosaicShader.setUniform('u_resolution', [width, height]);
-  mosaicShader.setUniform('u_isHovered', isHovered);
+  mosaicShader.setUniform('u_mosaicCounter', mosaicCounter);
 	mosaicShader.setUniform('u_tileY', tilesY);
   mosaicShader.setUniform('u_time', millis() / 1000.0);
-  mosaicShader.setUniform('u_hoverEndTime', hoverEndTime);
-
-  console.log('📊 Shader uniformA:', {
-    isHovered,
-    mouseX,
-    mouseY,
-    hoverEndTime,
-  });
-
   
   noStroke();
 	fill(255);

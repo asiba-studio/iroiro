@@ -126,6 +126,7 @@ function draw() {
   }
 
   mosaicCounter = constrain(mosaicCounter, mosaicCounterMin, mosaicCounterBase);
+  console.log(mosaicCounter);
 
 
   // シェーダーを使用

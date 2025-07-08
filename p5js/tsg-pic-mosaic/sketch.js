@@ -13,6 +13,7 @@ let imageAspect;
 let displayWidth, displayHeight;
 let tilesY;
 let actualCanvasHeight;
+let hoverGap = 25;
 
 
 // Verex shader
@@ -138,7 +139,7 @@ function draw() {
 	if (!img || !imageAspect) return;
   
   // マウスホバーの検出
-  isHovered = (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height);
+  isHovered = (mouseX > hoverGap && mouseX < width-hoverGap && mouseY > hoverGap && mouseY < height-hoverGap);
   
   // ホバー状態の変化を検出
   if (wasHovered && !isHovered) {

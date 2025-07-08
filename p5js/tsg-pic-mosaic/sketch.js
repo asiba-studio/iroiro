@@ -161,6 +161,14 @@ function draw() {
 	mosaicShader.setUniform('u_tileY', tilesY);
   mosaicShader.setUniform('u_time', millis() / 1000.0);
   mosaicShader.setUniform('u_hoverEndTime', hoverEndTime);
+
+  console.log('📊 Shader uniforms:', {
+    isHovered,
+    time: millis() / 1000.0,
+    hoverEndTime,
+    tilesY
+  });
+
   
   noStroke();
 	fill(255);

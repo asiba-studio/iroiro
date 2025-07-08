@@ -5,6 +5,7 @@ let mosaicShader;
 let mosaicCounterBase = 100.0;
 let mosaicCounter = mosaicCounterBase;
 let mosaicCounterMin = -50.0;
+let mosaicIntensity = [20.0, 10.0, 0.1];
 let defaultImageUrl = '';
 let virtualHeight = 1500;
 
@@ -39,6 +40,7 @@ uniform sampler2D u_texture;
 uniform vec2 u_resolution;
 uniform float uMosaicIntensity;
 uniform float u_mosaicCounter;
+uniform vec3 u_mosaicIntensity;
 uniform float u_tileY;
 uniform float u_time;
 varying vec2 vTexCoord;
@@ -68,16 +70,20 @@ void main() {
   // 3段階のモザイク強度を計算
   float x = uv.x;
   float baseIntensity;
+
+  float leftX = 0.33;
+  float rightX = 0.67;
+  float lineWidth = 1.2;
   
-  if (x < 0.33) {
+  if (x < leftX) {
     // 左側: 強いモザイク
-    baseIntensity = 20.0;
-  } else if (x < 0.66) {
+    baseIntensity = u_mosaicIntensity.x;
+  } else if (x < rightX) {
     // 中央: 中程度のモザイク
-    baseIntensity = 10.0;
+    baseIntensity = u_mosaicIntensity.y;
   } else {
     // 右側: 弱いモザイク
-    baseIntensity = 0.1;
+    baseIntensity = u_mosaicIntensity.z;
   }
 
   // 減衰
@@ -113,7 +119,7 @@ function draw() {
   // カウンターの更新
   if (isHovered) {
     // ホバー中は大幅に減少（毎フレーム約2.0減少 = 60fps時、30フレームで60減少）
-    mosaicCounter -= 2.0;
+    mosaicCounter -= 5.0;
   } else {
     // 非ホバー時は少し増加（毎フレーム約0.5増加 = 60fps時、120フレームで60増加）
     mosaicCounter += 0.5;
@@ -128,6 +134,7 @@ function draw() {
   mosaicShader.setUniform('u_texture', img);
   mosaicShader.setUniform('u_resolution', [width, height]);
   mosaicShader.setUniform('u_mosaicCounter', mosaicCounter);
+  mosaicShader.setUniform('u_mosaicIntensity', mosaicIntensity);
 	mosaicShader.setUniform('u_tileY', tilesY);
   mosaicShader.setUniform('u_time', millis() / 1000.0);
   

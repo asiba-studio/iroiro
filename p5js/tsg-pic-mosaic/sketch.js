@@ -79,7 +79,7 @@ void main() {
 
   float leftX = 0.33;
   float rightX = 0.67;
-  float lineWidth = 1.2;
+  float lineWidth = 0.5;
   
   if (x < leftX) {
     // 左側: 強いモザイク
@@ -100,7 +100,7 @@ void main() {
   // 2本の線
   vec4 lineLayer = vec4(0.0, 0.0, 0.0, 0.0);
   bool isLine = (abs(x - leftX) * u_resolution.x < lineWidth) || (abs(x - rightX) * u_resolution.x < lineWidth);
-  float lineStrength = 0.8 * clamp(u_mosaicCounter, 30.0, 100.0) / 100.0;
+  float lineStrength = 0.7 * clamp(u_mosaicCounter, 10.0, 100.0) / 100.0;
   if (isLine) {
     lineLayer = vec4(0.5, 0.5, 0.5, lineStrength);
   }

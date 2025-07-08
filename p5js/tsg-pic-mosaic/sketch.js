@@ -3,6 +3,8 @@
 let img;
 let mosaicShader;
 let isHovered = false;
+let wasHovered = false;
+let hoverEndTime = 0;
 let defaultImageUrl = '';
 let virtualHeight = 1500;
 
@@ -37,7 +39,14 @@ uniform vec2 u_resolution;
 uniform float uMosaicIntensity;
 uniform bool u_isHovered;
 uniform float u_tileY;
+uniform float u_time;
+uniform float u_hoverEndTime;
 varying vec2 vTexCoord;
+
+float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+}
+
 
 vec4 mosaic(sampler2D tex, vec2 uv, float intensity) {
 	if (intensity <= 0.0) {
@@ -81,6 +90,35 @@ void main() {
   if (x > 0.8) {
     intensity = 0.0;
   }
+
+  float finalIntensity = baseIntensity;
+
+  // ホバー終了後の復元エフェクト
+  if (!u_isHovered && u_hoverEndTime > 0.0) {
+      float timeSinceHoverEnd = u_time - u_hoverEndTime;
+      
+      // ピクセルごとのランダムな遅延時間（0.0〜2.0秒）
+      float pixelSeed = random(gl_FragCoord.xy * 0.01);
+      float delayTime = pixelSeed * 2.0;
+      
+      // 復元にかかる時間（0.5〜1.5秒）
+      float restoreTime = 0.5 + pixelSeed * 1.0;
+      
+      if (timeSinceHoverEnd > delayTime) {
+          // 復元開始
+          float restoreProgress = (timeSinceHoverEnd - delayTime) / restoreTime;
+          restoreProgress = clamp(restoreProgress, 0.0, 1.0);
+          
+          // イージング関数（スムーズな復元）
+          float eased = 1.0 - pow(1.0 - restoreProgress, 3.0);
+          
+          // モザイク強度を段階的に復元
+          finalIntensity = baseIntensity * (1.0 - eased);
+      } else {
+          // まだ復元開始していない（モザイクなし状態を維持）
+          finalIntensity = 0.0;
+      }
+  }
   
   gl_FragColor = mosaic(u_texture, uv, intensity);
 }
@@ -105,8 +143,19 @@ function draw() {
 	if (!img || !imageAspect) return;
   
   // マウスホバーの検出
-  isHovered = (mouseX > 150 && mouseX < width && mouseY > 0 && mouseY < height);
+  isHovered = (mouseX > 0 && mouseX < width && mouseY > 0 && mouseY < height);
   
+  // ホバー状態の変化を検出
+  if (wasHovered && !isHovered) {
+    // ホバーが終了した瞬間
+    hoverEndTime = millis() / 1000.0;
+  } else if (!wasHovered && isHovered) {
+    // ホバーが開始した瞬間（復元エフェクトをリセット）
+    hoverEndTime = 0;
+  }
+
+  wasHovered = isHovered;
+
   // シェーダーを使用
   shader(mosaicShader);
   
@@ -115,6 +164,8 @@ function draw() {
   mosaicShader.setUniform('u_resolution', [width, height]);
   mosaicShader.setUniform('u_isHovered', isHovered);
 	mosaicShader.setUniform('u_tileY', tilesY);
+  mosaicShader.setUniform('u_time', millis() / 1000.0);
+  mosaicShader.setUniform('u_hoverEndTime', hoverEndTime);
   
   noStroke();
 	fill(255);

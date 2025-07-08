@@ -97,7 +97,16 @@ void main() {
 
   float finalIntensity = baseIntensity * mosaicIntensityFactor;
   
-  gl_FragColor = mosaic(u_texture, uv, finalIntensity);
+  // 2本の線
+  vec4 lineLayer = vec4(0.0, 0.0, 0.0, 0.0);
+  bool isLine = (abs(x - leftX) * u_resolution.x < lineWidth) || (abs(x - rightX) * u_resolution.x < lineWidth);
+  float lineStrength = 0.8 * clamp(u_mosaicCounter, 30.0, 100.0) / 100.0;
+  if (isLine) {
+    lineLayer = vec4(0.5, 0.5, 0.5, lineStrength);
+  }
+
+  // 最終グラフィック
+  gl_FragColor = mix(mosaic(u_texture, uv, finalIntensity), lineLayer, lineLayer.a);
 }
 `;
 

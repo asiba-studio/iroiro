@@ -52,14 +52,19 @@ float random(vec2 st) {
 
 
 vec4 mosaic(sampler2D tex, vec2 uv, float intensity) {
-	if (intensity <= 0.0) {
-			return texture2D(tex, uv);
-	}
+  if (intensity <= 0.0) {
+    return texture2D(tex, uv);
+  }
 
-	vec2 mosaicSize = vec2(intensity);
-	vec2 coord = floor(uv * u_resolution / mosaicSize) * mosaicSize / u_resolution;
-	return texture2D(tex, coord);
+  vec2 mosaicSize = vec2(intensity);
+  
+  // セルの中央を基準にした座標計算
+  vec2 gridCoord = floor(uv * u_resolution / mosaicSize);
+  vec2 cellCenter = (gridCoord + 0.5) * mosaicSize / u_resolution;
+  
+  return texture2D(tex, cellCenter);
 }
+
 
 void main() {
   vec2 uv = vTexCoord;

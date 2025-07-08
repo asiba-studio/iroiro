@@ -94,7 +94,7 @@ function preload() {
 }
 
 function setup() {
-	createCanvas(230, 1300, WEBGL);
+	createCanvas(230, 1200, WEBGL);
 	calculateImageLayout();
 }
 
@@ -131,7 +131,7 @@ function calculateImageLayout() {
 	displayHeight = displayWidth / imageAspect;
 
 	// 縦方向に何枚タイルするか計算
-	tilesY = windowHeight / displayHeight;
+	tilesY = 1300 / displayHeight;
 
 	// 実際のキャンバス高さ（タイル分を含む）
 	actualCanvasHeight = displayHeight * tilesY;

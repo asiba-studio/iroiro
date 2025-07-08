@@ -73,22 +73,17 @@ void main() {
   
   // 3段階のモザイク強度を計算
   float x = uv.x;
-  float intensity;
+  float baseIntensity;
   
   if (x < 0.33) {
     // 左側: 強いモザイク
-    intensity = 20.0;
+    baseIntensity = 20.0;
   } else if (x < 0.66) {
     // 中央: 中程度のモザイク
-    intensity = 10.0;
+    baseIntensity = 10.0;
   } else {
     // 右側: 弱いモザイク
-    intensity = 5.0;
-  }
-  
-  // さらに右端はモザイクなし
-  if (x > 0.8) {
-    intensity = 0.0;
+    baseIntensity = 0.0;
   }
 
   float finalIntensity = baseIntensity;

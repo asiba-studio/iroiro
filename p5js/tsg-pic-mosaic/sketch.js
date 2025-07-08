@@ -162,7 +162,7 @@ function draw() {
   mosaicShader.setUniform('u_time', millis() / 1000.0);
   mosaicShader.setUniform('u_hoverEndTime', hoverEndTime);
 
-  console.log('📊 Shader uniforms:', {
+  console.log('📊 Shader uniformA:', {
     isHovered,
     mouseX,
     mouseY,

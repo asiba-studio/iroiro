@@ -83,7 +83,7 @@ void main() {
     baseIntensity = 10.0;
   } else {
     // 右側: 弱いモザイク
-    baseIntensity = 0.0;
+    baseIntensity = 0.1;
   }
 
   float finalIntensity = baseIntensity;

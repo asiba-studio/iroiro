@@ -648,5 +648,20 @@
     "asset_folder": "INC-3rd/day-5",
     "secure_url": "https://res.cloudinary.com/db3bjjvzp/image/upload/v1750645128/photo_00000_qfc07o.jpg",
     "display_name": "photo_00000_qfc07o"
+  },
+  {
+    "asset_folder": "INC-3rd/day-6",
+    "secure_url": "https://res.cloudinary.com/db3bjjvzp/image/upload/v1753128478/IMG_9352_eikdpg.jpg",
+    "display_name": "IMG_9352_eikdpg"
+  },
+  {
+    "asset_folder": "INC-3rd/day-6",
+    "secure_url": "https://res.cloudinary.com/db3bjjvzp/image/upload/v1753128478/IMG_9345_nobxzd.jpg",
+    "display_name": "IMG_9345_nobxzd"
+  },
+  {
+    "asset_folder": "INC-3rd/day-6",
+    "secure_url": "https://res.cloudinary.com/db3bjjvzp/image/upload/v1753128477/IMG_9320_oty5he.jpg",
+    "display_name": "IMG_9320_oty5he"
   }
 ]
